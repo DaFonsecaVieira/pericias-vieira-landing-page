@@ -30,10 +30,11 @@ export default function Contact() {
 
                         <div className="flex flex-col sm:flex-row justify-center gap-6 pt-6">
                             <a
-                                href="https://wa.me/5592993458428?text=Olá! Gostaria de solicitar um orçamento para perícia grafotécnica."
+                                href="https://wa.me/559281085357?text=Olá! Gostaria de solicitar um orçamento para perícia grafotécnica."
                                 target="_blank"
                                 rel="noopener"
                                 className="bg-[#25D366] hover:bg-[#20bd5c] text-white font-bold py-4 px-10 rounded-sm transition-all flex items-center justify-center gap-3 shadow-xl shadow-green-500/10 group"
+                                onClick={() => { if (typeof window !== 'undefined' && (window as any).fbq) (window as any).fbq('track', 'Contact'); }}
                             >
                                 <MessageCircle size={24} />
                                 Fale pelo WhatsApp
