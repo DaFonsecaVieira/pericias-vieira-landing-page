@@ -37,8 +37,9 @@ export default function Hero() {
 
                     <div className="flex flex-col sm:flex-row gap-4 pt-4">
                         <a
-                            href="https://wa.me/5592993458428"
+                            href="https://wa.me/559281085357"
                             className="bg-accent hover:bg-accent-light text-primary font-bold py-4 px-8 rounded-sm transition-all flex items-center justify-center gap-2 group shadow-xl shadow-accent/20"
+                            onClick={() => { if (typeof window !== 'undefined' && (window as any).fbq) (window as any).fbq('track', 'Contact'); }}
                         >
                             Solicitar Orçamento
                             <ChevronRight className="group-hover:translate-x-1 transition-transform" />

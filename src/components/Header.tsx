@@ -59,9 +59,10 @@ export default function Header() {
                         </Link>
                     ))}
                     <Link
-                        href="https://wa.me/5592993458428"
+                        href="https://wa.me/559281085357"
                         target="_blank"
                         className="bg-accent hover:bg-accent-light text-primary font-bold py-2 px-5 rounded-sm transition-all text-sm"
+                        onClick={() => { if (typeof window !== 'undefined' && (window as any).fbq) (window as any).fbq('track', 'Contact'); }}
                     >
                         Orçamento
                     </Link>
@@ -93,10 +94,10 @@ export default function Header() {
                         </Link>
                     ))}
                     <Link
-                        href="https://wa.me/5592993458428"
+                        href="https://wa.me/559281085357"
                         target="_blank"
                         className="bg-accent hover:bg-accent-light text-primary font-bold py-3 px-8 rounded-sm transition-all text-lg"
-                        onClick={() => setIsMenuOpen(false)}
+                        onClick={() => { setIsMenuOpen(false); if (typeof window !== 'undefined' && (window as any).fbq) (window as any).fbq('track', 'Contact'); }}
                     >
                         Falar no WhatsApp
                     </Link>
