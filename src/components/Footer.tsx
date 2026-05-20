@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Mail, Phone, Instagram, Linkedin, Facebook } from "lucide-react";
+import { Phone, Instagram, Linkedin, Facebook, Mail } from "lucide-react";
 
 export default function Footer() {
     const currentYear = new Date().getFullYear();
@@ -70,13 +70,13 @@ export default function Footer() {
                             </li>
                             <li>
                                 <a
-                                    href="https://wa.me/559281085357"
+                                    href="https://wa.me/5592981085357"
                                     target="_blank"
                                     className="flex items-center gap-3 text-foreground/60 hover:text-accent transition-colors text-sm"
                                     onClick={() => { if (typeof window !== 'undefined' && (window as any).fbq) (window as any).fbq('track', 'Contact'); }}
                                 >
                                     <Phone size={16} className="text-accent" />
-                                    (92) 8108-5357
+                                    (92) 98108-5357
                                 </a>
                             </li>
                             <li>

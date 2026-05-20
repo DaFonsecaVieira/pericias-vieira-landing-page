@@ -1,9 +1,26 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { MessageCircle, Mail } from "lucide-react";
+import { MessageCircle } from "lucide-react";
+import { sendFacebookEvent } from "@/lib/facebook-events";
 
 export default function Contact() {
+    const handleContactClick = async (type: string) => {
+        try {
+            await sendFacebookEvent("Purchase", {
+                // For a lead/contact, we can simulate a purchase or use 'Lead' event.
+                // The user specifically requested the 'Purchase' payload.
+                em: ["7b17fb0bd173f625b58636fb796407c22b3d16fc78302d79f0fd30c2fc2fc068"]
+            }, {
+                currency: "BRL",
+                value: "1500.00",
+                contact_type: type
+            });
+        } catch (error) {
+            console.error("Failed to track event:", error);
+        }
+    };
+
     return (
         <section id="contato" className="py-24 bg-primary relative overflow-hidden">
             <div className="container mx-auto px-4">
@@ -28,23 +45,21 @@ export default function Contact() {
                             extrajudiciais em todo o território nacional.
                         </p>
 
-                        <div className="flex flex-col sm:flex-row justify-center gap-6 pt-6">
+                        <div className="flex justify-center pt-6">
                             <a
-                                href="https://wa.me/559281085357?text=Olá! Gostaria de solicitar um orçamento para perícia grafotécnica."
+                                href="https://wa.me/5592981085357?text=Olá! Gostaria de solicitar um orçamento para perícia grafotécnica."
                                 target="_blank"
                                 rel="noopener"
                                 className="bg-[#25D366] hover:bg-[#20bd5c] text-white font-bold py-4 px-10 rounded-sm transition-all flex items-center justify-center gap-3 shadow-xl shadow-green-500/10 group"
-                                onClick={() => { if (typeof window !== 'undefined' && (window as any).fbq) (window as any).fbq('track', 'Contact'); }}
+                                onClick={() => {
+                                    handleContactClick("whatsapp");
+                                    if (typeof window !== 'undefined' && (window as any).fbq) {
+                                        (window as any).fbq('track', 'Contact');
+                                    }
+                                }}
                             >
                                 <MessageCircle size={24} />
                                 Fale pelo WhatsApp
-                            </a>
-                            <a
-                                href="mailto:contato@peritografo.com.br"
-                                className="bg-accent hover:bg-accent-light text-primary font-bold py-4 px-10 rounded-sm transition-all flex items-center justify-center gap-3 shadow-xl shadow-accent/20"
-                            >
-                                <Mail size={24} />
-                                Enviar E-mail
                             </a>
                         </div>
                     </div>

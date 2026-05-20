@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
@@ -27,7 +28,10 @@ export default function Header() {
     }, []);
 
     return (
-        <header
+        <motion.header
+            initial={{ y: -100 }}
+            animate={{ y: 0 }}
+            transition={{ duration: 0.5 }}
             className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled ? "glass py-3 shadow-lg" : "bg-transparent py-5"
                 }`}
         >
@@ -59,7 +63,7 @@ export default function Header() {
                         </Link>
                     ))}
                     <Link
-                        href="https://wa.me/559281085357"
+                        href="https://wa.me/5592981085357"
                         target="_blank"
                         className="bg-accent hover:bg-accent-light text-primary font-bold py-2 px-5 rounded-sm transition-all text-sm"
                         onClick={() => { if (typeof window !== 'undefined' && (window as any).fbq) (window as any).fbq('track', 'Contact'); }}
@@ -94,7 +98,7 @@ export default function Header() {
                         </Link>
                     ))}
                     <Link
-                        href="https://wa.me/559281085357"
+                        href="https://wa.me/5592981085357"
                         target="_blank"
                         className="bg-accent hover:bg-accent-light text-primary font-bold py-3 px-8 rounded-sm transition-all text-lg"
                         onClick={() => { setIsMenuOpen(false); if (typeof window !== 'undefined' && (window as any).fbq) (window as any).fbq('track', 'Contact'); }}
@@ -103,6 +107,6 @@ export default function Header() {
                     </Link>
                 </div>
             </div>
-        </header>
+        </motion.header>
     );
 }
