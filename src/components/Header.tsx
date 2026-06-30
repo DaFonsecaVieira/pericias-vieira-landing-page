@@ -7,12 +7,13 @@ import Link from "next/link";
 import { Menu, X } from "lucide-react";
 
 const navLinks = [
-    { name: "Sobre", href: "#sobre" },
-    { name: "Serviços", href: "#servicos" },
-    { name: "Tipos de Perícia", href: "#tipos" },
-    { name: "Áreas de Atuação", href: "#atuacao" },
-    { name: "Benefícios", href: "#beneficios" },
-    { name: "Contato", href: "#contato" },
+    { name: "Sobre", href: "/#sobre" },
+    { name: "Serviços", href: "/#servicos" },
+    { name: "Tipos de Perícia", href: "/#tipos" },
+    { name: "Áreas de Atuação", href: "/#atuacao" },
+    { name: "Benefícios", href: "/#beneficios" },
+    { name: "Blog", href: "/blog" },
+    { name: "Contato", href: "/#contato" },
 ];
 
 export default function Header() {
@@ -66,7 +67,16 @@ export default function Header() {
                         href="https://wa.me/5592981085357"
                         target="_blank"
                         className="bg-accent hover:bg-accent-light text-primary font-bold py-2 px-5 rounded-sm transition-all text-sm"
-                        onClick={() => { if (typeof window !== 'undefined' && (window as any).fbq) (window as any).fbq('track', 'Contact'); }}
+                        onClick={() => {
+                            if (typeof window !== 'undefined') {
+                                if ((window as any).fbq) (window as any).fbq('track', 'Contact');
+                                if ((window as any).gtag) (window as any).gtag('event', 'conversion', {
+                                    'send_to': 'AW-10995737577/fCy_CJWyzbIbEOnHlvso',
+                                    'value': 5.0,
+                                    'currency': 'BRL'
+                                });
+                            }
+                        }}
                     >
                         Orçamento
                     </Link>
@@ -101,7 +111,17 @@ export default function Header() {
                         href="https://wa.me/5592981085357"
                         target="_blank"
                         className="bg-accent hover:bg-accent-light text-primary font-bold py-3 px-8 rounded-sm transition-all text-lg"
-                        onClick={() => { setIsMenuOpen(false); if (typeof window !== 'undefined' && (window as any).fbq) (window as any).fbq('track', 'Contact'); }}
+                        onClick={() => {
+                            setIsMenuOpen(false);
+                            if (typeof window !== 'undefined') {
+                                if ((window as any).fbq) (window as any).fbq('track', 'Contact');
+                                if ((window as any).gtag) (window as any).gtag('event', 'conversion', {
+                                    'send_to': 'AW-10995737577/fCy_CJWyzbIbEOnHlvso',
+                                    'value': 5.0,
+                                    'currency': 'BRL'
+                                });
+                            }
+                        }}
                     >
                         Falar no WhatsApp
                     </Link>
