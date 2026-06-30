@@ -83,6 +83,7 @@ const buildPayload = {
   node_version: 22,
   app_type: "next",
   build_script: "build",
+  root_directory: "pericias-vieira-landing-page-main",
   output_directory: ".next",
   package_manager: "npm",
   source_type: "archive",

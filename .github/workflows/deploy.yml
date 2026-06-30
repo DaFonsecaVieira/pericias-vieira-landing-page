@@ -23,13 +23,12 @@ jobs:
       - name: Create source archive
         run: |
           set -e
-          zip -r deploy.zip . \
-            --exclude "node_modules/*" \
-            --exclude ".next/*" \
-            --exclude "out/*" \
-            --exclude ".git/*" \
-            --exclude "*.zip"
-          ls -lh deploy.zip
+          # Wrap inside pericias-vieira-landing-page-main/ to match Hostinger root_directory config
+          mkdir -p /tmp/build-staging/pericias-vieira-landing-page-main
+          rsync -a --exclude=node_modules --exclude=.next --exclude=out --exclude=.git . /tmp/build-staging/pericias-vieira-landing-page-main/
+          cd /tmp/build-staging
+          zip -r $GITHUB_WORKSPACE/deploy.zip pericias-vieira-landing-page-main
+          ls -lh $GITHUB_WORKSPACE/deploy.zip
 
       - name: Deploy to Hostinger
         run: node scripts/deploy-hostinger.mjs "$(pwd)/deploy.zip"
