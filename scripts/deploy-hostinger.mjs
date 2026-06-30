@@ -15,7 +15,7 @@ import fs from "fs";
 import path from "path";
 import { createReadStream, statSync } from "fs";
 
-const API_BASE = "https://api.hostinger.com";
+const API_BASE = "https://developers.hostinger.com";
 const TOKEN = process.env.HOSTINGER_API_TOKEN;
 const DOMAIN = process.env.HOSTINGER_DOMAIN;
 const USERNAME = process.env.HOSTINGER_USERNAME;
