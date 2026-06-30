@@ -17,10 +17,12 @@ jobs:
         with:
           node-version: 22
 
+      - name: Install deploy dependencies
+        run: npm install axios form-data --no-save
+
       - name: Create source archive
         run: |
           set -e
-          sudo apt-get install -y zip > /dev/null 2>&1 || true
           zip -r deploy.zip . \
             --exclude "node_modules/*" \
             --exclude ".next/*" \
@@ -28,13 +30,9 @@ jobs:
             --exclude ".git/*" \
             --exclude "*.zip"
           ls -lh deploy.zip
-          echo "Archive created successfully"
 
       - name: Deploy to Hostinger
-        run: |
-          set -e
-          ls -lh deploy.zip
-          node scripts/deploy-hostinger.mjs "$(pwd)/deploy.zip"
+        run: node scripts/deploy-hostinger.mjs "$(pwd)/deploy.zip"
         env:
           HOSTINGER_API_TOKEN: ${{ secrets.HOSTINGER_API_TOKEN }}
           HOSTINGER_DOMAIN: ${{ secrets.HOSTINGER_DOMAIN }}
