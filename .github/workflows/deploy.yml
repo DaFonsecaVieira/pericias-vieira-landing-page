@@ -13,7 +13,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Create source archive (exclude node_modules and build output)
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Create source archive
         run: |
           zip -r deploy.zip . \
             --exclude "node_modules/*" \
@@ -21,24 +25,11 @@ jobs:
             --exclude "out/*" \
             --exclude ".git/*" \
             --exclude "*.zip"
+          echo "Archive size: $(du -sh deploy.zip | cut -f1)"
 
-      - name: Deploy to Hostinger via API
-        run: |
-          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
-            "https://api.hostinger.com/v1/hosting/accounts/${{ secrets.HOSTINGER_USERNAME }}/websites/${{ secrets.HOSTINGER_DOMAIN }}/nodejs/builds" \
-            -H "Authorization: Bearer ${{ secrets.HOSTINGER_API_TOKEN }}" \
-            -H "Accept: application/json" \
-            -F "archive=@deploy.zip" \
-            -F "node_version=22" \
-            -F "build_script=build" \
-            -F "root_directory=pericias-vieira-landing-page-main" \
-            -F "output_directory=.next")
-          HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
-          BODY=$(echo "$RESPONSE" | head -n-1)
-          echo "Response: $BODY"
-          echo "HTTP Status: $HTTP_CODE"
-          if [ "$HTTP_CODE" -lt 200 ] || [ "$HTTP_CODE" -ge 300 ]; then
-            echo "Deploy failed with status $HTTP_CODE"
-            exit 1
-          fi
-          echo "Deploy triggered successfully"
+      - name: Deploy to Hostinger
+        run: node scripts/deploy-hostinger.mjs deploy.zip
+        env:
+          HOSTINGER_API_TOKEN: ${{ secrets.HOSTINGER_API_TOKEN }}
+          HOSTINGER_DOMAIN: ${{ secrets.HOSTINGER_DOMAIN }}
+          HOSTINGER_USERNAME: ${{ secrets.HOSTINGER_USERNAME }}
