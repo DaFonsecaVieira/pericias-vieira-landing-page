@@ -19,16 +19,22 @@ jobs:
 
       - name: Create source archive
         run: |
+          set -e
+          sudo apt-get install -y zip > /dev/null 2>&1 || true
           zip -r deploy.zip . \
             --exclude "node_modules/*" \
             --exclude ".next/*" \
             --exclude "out/*" \
             --exclude ".git/*" \
             --exclude "*.zip"
-          echo "Archive size: $(du -sh deploy.zip | cut -f1)"
+          ls -lh deploy.zip
+          echo "Archive created successfully"
 
       - name: Deploy to Hostinger
-        run: node scripts/deploy-hostinger.mjs deploy.zip
+        run: |
+          set -e
+          ls -lh deploy.zip
+          node scripts/deploy-hostinger.mjs "$(pwd)/deploy.zip"
         env:
           HOSTINGER_API_TOKEN: ${{ secrets.HOSTINGER_API_TOKEN }}
           HOSTINGER_DOMAIN: ${{ secrets.HOSTINGER_DOMAIN }}

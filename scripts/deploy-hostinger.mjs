@@ -21,15 +21,18 @@ const DOMAIN = process.env.HOSTINGER_DOMAIN;
 const USERNAME = process.env.HOSTINGER_USERNAME;
 const ARCHIVE_PATH = process.argv[2];
 
-if (!TOKEN || !DOMAIN || !USERNAME || !ARCHIVE_PATH) {
-  console.error("Missing required env vars or archive path argument");
-  process.exit(1);
-}
+if (!TOKEN) { console.error("Missing HOSTINGER_API_TOKEN"); process.exit(1); }
+if (!DOMAIN) { console.error("Missing HOSTINGER_DOMAIN"); process.exit(1); }
+if (!USERNAME) { console.error("Missing HOSTINGER_USERNAME"); process.exit(1); }
+if (!ARCHIVE_PATH) { console.error("Missing archive path argument (usage: node deploy-hostinger.mjs <path>)"); process.exit(1); }
 
 if (!fs.existsSync(ARCHIVE_PATH)) {
   console.error(`Archive not found: ${ARCHIVE_PATH}`);
   process.exit(1);
 }
+
+console.log(`Archive: ${ARCHIVE_PATH} (${(fs.statSync(ARCHIVE_PATH).size / 1024).toFixed(0)} KB)`);
+console.log(`Domain: ${DOMAIN} | Username: ${USERNAME}`);
 
 const headers = {
   Authorization: `Bearer ${TOKEN}`,
