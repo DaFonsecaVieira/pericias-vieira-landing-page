@@ -37,6 +37,7 @@ console.log(`Domain: ${DOMAIN} | Username: ${USERNAME}`);
 const headers = {
   Authorization: `Bearer ${TOKEN}`,
   "Content-Type": "application/json",
+  "Accept": "application/json",
 };
 
 async function fetchJson(url, options = {}) {
