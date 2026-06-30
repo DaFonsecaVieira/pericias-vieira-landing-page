@@ -1,4 +1,4 @@
-name: Build and Deploy
+name: Deploy to Hostinger
 
 on:
   push:
@@ -8,27 +8,37 @@ on:
   workflow_dispatch: {}
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-          cache-dependency-path: package-lock.json
+      - name: Create source archive (exclude node_modules and build output)
+        run: |
+          zip -r deploy.zip . \
+            --exclude "node_modules/*" \
+            --exclude ".next/*" \
+            --exclude "out/*" \
+            --exclude ".git/*" \
+            --exclude "*.zip"
 
-      - run: npm ci
-
-      - run: npm run build
-        env:
-          NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL }}
-
-      - uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: out/
-          server-dir: ${{ secrets.FTP_SERVER_DIR }}
+      - name: Deploy to Hostinger via API
+        run: |
+          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
+            "https://api.hostinger.com/v1/hosting/accounts/${{ secrets.HOSTINGER_USERNAME }}/websites/${{ secrets.HOSTINGER_DOMAIN }}/nodejs/builds" \
+            -H "Authorization: Bearer ${{ secrets.HOSTINGER_API_TOKEN }}" \
+            -H "Accept: application/json" \
+            -F "archive=@deploy.zip" \
+            -F "node_version=22" \
+            -F "build_script=build" \
+            -F "root_directory=pericias-vieira-landing-page-main" \
+            -F "output_directory=.next")
+          HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+          BODY=$(echo "$RESPONSE" | head -n-1)
+          echo "Response: $BODY"
+          echo "HTTP Status: $HTTP_CODE"
+          if [ "$HTTP_CODE" -lt 200 ] || [ "$HTTP_CODE" -ge 300 ]; then
+            echo "Deploy failed with status $HTTP_CODE"
+            exit 1
+          fi
+          echo "Deploy triggered successfully"

@@ -12,25 +12,6 @@ function isValidCategory(value: string): value is BlogCategory {
   return (BLOG_CATEGORIES as readonly string[]).includes(value);
 }
 
-export function generateStaticParams() {
-  const params = BLOG_CATEGORIES.flatMap((categoria) => {
-    const pages = totalPages(getPostsByCategory(categoria).length);
-    return Array.from({ length: Math.max(0, pages - 1) }, (_, i) => ({
-      categoria,
-      page: String(i + 2),
-    }));
-  });
-
-  // `output: export` requires this dynamic route to produce at least one
-  // static param. Until any category has enough posts for a real page 2,
-  // pre-render a single placeholder that renders an empty state.
-  if (params.length === 0) {
-    return [{ categoria: BLOG_CATEGORIES[0], page: "2" }];
-  }
-
-  return params;
-}
-
 export async function generateMetadata({
   params,
 }: {
@@ -57,9 +38,11 @@ export default async function BlogCategoryPagePagination({
   const allPosts = getPostsByCategory(categoria);
   const pages = totalPages(allPosts.length);
 
-  if (!Number.isInteger(pageNumber) || pageNumber < 2) notFound();
+  if (!Number.isInteger(pageNumber) || pageNumber < 2 || pageNumber > pages) {
+    notFound();
+  }
 
-  const posts = pageNumber <= pages ? paginate(allPosts, pageNumber, POSTS_PER_PAGE) : [];
+  const posts = paginate(allPosts, pageNumber, POSTS_PER_PAGE);
   const label = BLOG_CATEGORY_LABELS[categoria];
 
   return (
@@ -68,7 +51,7 @@ export default async function BlogCategoryPagePagination({
       <BlogListing
         posts={posts}
         currentPage={pageNumber}
-        totalPages={Math.max(pages, pageNumber)}
+        totalPages={pages}
         basePath={`/blog/categoria/${categoria}`}
         activeCategory={categoria}
         title={label}

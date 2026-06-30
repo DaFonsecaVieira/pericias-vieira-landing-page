@@ -52,14 +52,3 @@ export function totalPages(itemCount: number, perPage = POSTS_PER_PAGE): number 
   return Math.max(1, Math.ceil(itemCount / perPage));
 }
 
-/**
- * Page numbers to pre-render for a paginated route, beyond page 1.
- * `output: export` requires every dynamic route to produce at least one
- * static param, so page 2 is always included as a placeholder even when
- * there isn't enough content for it yet (renders an empty state instead of 404).
- */
-export function staticPaginationParams(itemCount: number, perPage = POSTS_PER_PAGE): number[] {
-  const pages = totalPages(itemCount, perPage);
-  const last = Math.max(2, pages);
-  return Array.from({ length: last - 1 }, (_, i) => i + 2);
-}
